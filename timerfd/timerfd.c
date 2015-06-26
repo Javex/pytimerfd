@@ -64,8 +64,26 @@ Py_timerfd_settime(Py_timerfd *self, PyObject *args, PyObject *kwds)
         old_value.it_value.tv_nsec);
 }
 
+static PyObject *
+Py_timerfd_gettime(Py_timerfd *self)
+{
+    struct itimerspec curr_value = {0};
+
+    if(timerfd_gettime(self->fd, &curr_value) == -1) {
+        PyErr_SetFromErrno(PyExc_OSError);
+        return NULL;
+    }
+    return Py_BuildValue(
+        "ilil",
+        curr_value.it_interval.tv_sec,
+        curr_value.it_interval.tv_nsec,
+        curr_value.it_value.tv_sec,
+        curr_value.it_value.tv_nsec);
+}
+
 static PyMethodDef Py_timerfd_methods[] = {
     {"settime", (PyCFunction)Py_timerfd_settime, METH_VARARGS | METH_KEYWORDS, ""},
+    {"gettime", (PyCFunction)Py_timerfd_gettime, METH_VARARGS | METH_KEYWORDS, ""},
     {NULL}  /* Sentinel */
 };
 
