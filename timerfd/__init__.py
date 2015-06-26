@@ -1,6 +1,7 @@
 import _timerfd
 import math
 import struct
+import os
 from _timerfd import *
 
 
@@ -23,6 +24,8 @@ class timerfd(_timerfd._timerfd):
             fraction, integer = math.modf(value)
             return int(integer), int(fraction * 1000000000)
 
+    def close(self):
+        os.close(self.fd)
 def unpack(buf):
     count, = struct.unpack("Q", buf)
     return count
