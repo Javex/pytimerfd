@@ -4,21 +4,17 @@ import struct
 from _timerfd import *
 
 
-class timerfd(object):
 
-    def __init__(self, clockid, flags):
-        self._obj = _timerfd._timerfd(clockid, flags)
+
+class timerfd(_timerfd._timerfd):
 
     def settime(self, flags, interval=None, value=None):
         i_int, i_frac = self._split_time(interval)
         v_int, v_frac = self._split_time(value)
-        return self._obj.settime(flags, (v_int, v_frac, i_int, i_frac))
-
-    def gettime(self):
-     	raise NotImplementedError
+        return _timerfd._timerfd.settime(self, flags, (i_int, i_frac, v_int, v_frac))
 
     def fileno(self):
-        return self._obj.fd
+        return self.fd
 
     def _split_time(self, value=None):
         if value is None:

@@ -44,7 +44,7 @@ Py_timerfd_settime(Py_timerfd *self, PyObject *args, PyObject *kwds)
     int flags;
     struct itimerspec new_value = {0}, old_value = {0};
 
-    if (! PyArg_ParseTupleAndKeywords(
+    if (!PyArg_ParseTupleAndKeywords(
             args, kwds, "i(ilil)", kwlist, &flags,
             &new_value.it_interval.tv_sec,
             &new_value.it_interval.tv_nsec,
