@@ -45,7 +45,7 @@ Py_timerfd_settime(Py_timerfd *self, PyObject *args, PyObject *kwds)
     struct itimerspec new_value = {0}, old_value = {0};
 
     if (!PyArg_ParseTupleAndKeywords(
-            args, kwds, "i(ilil)", kwlist, &flags,
+            args, kwds, "i((il)(il))", kwlist, &flags,
             &new_value.it_interval.tv_sec,
             &new_value.it_interval.tv_nsec,
             &new_value.it_value.tv_sec,
@@ -57,7 +57,7 @@ Py_timerfd_settime(Py_timerfd *self, PyObject *args, PyObject *kwds)
         return NULL;
     }
     return Py_BuildValue(
-        "ilil",
+        "(il)(il)",
         old_value.it_interval.tv_sec, 
         old_value.it_interval.tv_nsec,
         old_value.it_value.tv_sec,
@@ -74,7 +74,7 @@ Py_timerfd_gettime(Py_timerfd *self)
         return NULL;
     }
     return Py_BuildValue(
-        "ilil",
+        "(il)(il)",
         curr_value.it_interval.tv_sec,
         curr_value.it_interval.tv_nsec,
         curr_value.it_value.tv_sec,

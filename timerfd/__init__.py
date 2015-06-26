@@ -31,9 +31,10 @@ class timerfd(_timerfd._timerfd):
         Both arguments can be floats or ints.
         The ``flags`` argument is as described for ``timerfd_settime(2)``.
         """
-        i_int, i_frac = self._split_time(interval)
-        v_int, v_frac = self._split_time(value)
-        return _timerfd._timerfd.settime(self, flags, (i_int, i_frac, v_int, v_frac))
+        interval, value = _timerfd._timerfd.settime(self, flags, (self._split_time(interval), self._split_time(value)))
+        interval = self._join_time(*interval)
+        value = self._join_time(*value)
+        return interval, value
 
     def fileno(self):
         """Return the associated file descriptor"""
@@ -46,14 +47,17 @@ class timerfd(_timerfd._timerfd):
             fraction, integer = math.modf(value)
             return int(integer), int(fraction * 1000000000)
 
+    def _join_time(self, secs, nsecs):
+        return secs + float(nsecs) / 1000000000
+
     def gettime(self):
         """
         Get the time left on a file descriptor. Returns a pair of ``(interval, value)``
         similar to the values passed in to ``settime``.
         """
-        (i_int, i_frac, v_int, v_frac) = _timerfd._timerfd.gettime(self)
-        interval = i_int + float(i_frac) / 1000000000
-        value = v_int + float(v_frac) / 1000000000
+        interval, value = _timerfd._timerfd.gettime(self)
+        interval = self._join_time(*interval)
+        value = self._join_time(*value)
         return interval, value
 
     def close(self):

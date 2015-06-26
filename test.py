@@ -5,7 +5,7 @@ import os
 timer = timerfd.timerfd(timerfd.CLOCK_MONOTONIC, timerfd.TFD_NONBLOCK)
 timer.settime(0, value=0.5, interval=0.5)
 print(timer.gettime())
-timer.settime(0, value=0.5, interval=0.5)
+timer.settime(0, value=1.2, interval=0.15)
 print(timer.gettime())
 
 epoll = select.epoll()
